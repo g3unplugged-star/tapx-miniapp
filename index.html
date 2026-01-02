@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>TapX Mini App</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body {
+      background: #0f172a;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding-top: 60px;
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 18px;
+      border-radius: 10px;
+      border: none;
+      background: #22c55e;
+      color: black;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🚀 TapX is Live</h1>
+<p>If you see this, GitHub Pages + Telegram works</p>
+
+<button onclick="tap()">TAP</button>
+<p id="score">Score: 0</p>
+
+<script>
+  let score = 0;
+  const tg = window.Telegram.WebApp;
+  tg.expand();
+
+  function tap() {
+    score++;
+    document.getElementById("score").innerText = "Score: " + score;
+  }
+</script>
+
+</body>
+</html>
