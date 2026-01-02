@@ -1,44 +1,88 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>TapX Mini App</title>
+  <title>TapX Mini Game</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     body {
+      margin: 0;
+      font-family: Arial, sans-serif;
       background: #0f172a;
       color: white;
-      font-family: Arial, sans-serif;
       text-align: center;
       padding-top: 60px;
     }
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 1.2em;
+    }
     button {
-      padding: 15px 30px;
-      font-size: 18px;
-      border-radius: 10px;
+      padding: 20px 40px;
+      font-size: 22px;
+      border-radius: 12px;
       border: none;
       background: #22c55e;
       color: black;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+    button:active {
+      transform: scale(0.9);
     }
   </style>
 </head>
 <body>
 
 <h1>🚀 TapX is Live</h1>
-<p>If you see this, GitHub Pages + Telegram works</p>
-
-<button onclick="tap()">TAP</button>
+<p>Tap the button to increase your score!</p>
+<button id="tapBtn">TAP</button>
 <p id="score">Score: 0</p>
 
 <script>
-  let score = 0;
   const tg = window.Telegram.WebApp;
   tg.expand();
 
-  function tap() {
-    score++;
-    document.getElementById("score").innerText = "Score: " + score;
+  // Get Telegram user ID
+  const userId = tg.initDataUnsafe.user.id;
+
+  const scoreDisplay = document.getElementById("score");
+  const tapBtn = document.getElementById("tapBtn");
+
+  // Backend endpoint (replace with your server URL)
+  const BACKEND_URL = "https://YOUR_SERVER_DOMAIN/tap";
+
+  // Initial score fetch
+  async function fetchScore() {
+    try {
+      const res = await fetch(`${BACKEND_URL}?userId=${userId}`);
+      const data = await res.json();
+      scoreDisplay.innerText = "Score: " + data.score;
+    } catch(err) {
+      console.error("Error fetching score:", err);
+    }
   }
+
+  // Handle TAP
+  tapBtn.addEventListener("click", async () => {
+    try {
+      const res = await fetch(BACKEND_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId })
+      });
+      const data = await res.json();
+      scoreDisplay.innerText = "Score: " + data.score;
+    } catch(err) {
+      console.error("Error sending tap:", err);
+    }
+  });
+
+  // Fetch initial score on load
+  fetchScore();
 </script>
 
 </body>
